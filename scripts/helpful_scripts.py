@@ -17,6 +17,7 @@ def get_account(number=None):
 
 # ex, encode_function_data(initializer=box.store, 2) will trigger Box.sol to store 2
 # as the uint that is value
+# Encoding the function call allows us to work with an initializer
 def encode_function_data(initializer=None, *args):
     # there will be an issue if the length of arguments is 0:
     if len(args) == 0 or not initializer:
