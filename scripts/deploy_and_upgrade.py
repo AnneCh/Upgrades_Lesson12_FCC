@@ -8,7 +8,7 @@ from brownie import (
     BoxV2,
 )
 
-
+# publish_source=True allows to see on Etherscan
 # this is our implementation contract, Box.sol
 # now we have to hook up our implementation contract to a proxy
 # 1) give it a proxy admin (optional but if we do, it's recommended to use some type
@@ -23,12 +23,13 @@ from brownie import (
 def main():
     account = get_account()
     print(f"Deploying to {network.show_active()}")
-    box = Box.deploy({"from": account})
-    print(box.retrieve())
+    box = Box.deploy({"from": account}, publish_source=True)
+    # Optional, deploy the ProxyAdmin and use that as the admin contract
+    proxy_admin = ProxyAdmin.deploy(
+        {"from": account},
+    )
 
-    proxy_admin = ProxyAdmin.deploy({"from": account})
-
-    initializer = box.store, 1
+    # initializer = box.store, 1
     box_encoded_initializer_function = encode_function_data()
     # in this example, we are telling it not to use an initializer, by leaving the function without arguments
 
@@ -37,6 +38,7 @@ def main():
         proxy_admin.address,
         box_encoded_initializer_function,
         {"from": account, "gas_limit": 1000000},
+        publish_source=True,
     )
     print(f"Proxy deployed to {proxy}, you can now upgrade to V2")
     # now we can call functions on the proxy's address by attaching the Box's ABI to the proxy's address
@@ -52,7 +54,7 @@ def main():
     # saving the retrieved data in the proxy
 
     # NOW, let's deploy a V2 implementation contract
-    box_v2 = BoxV2.deploy({"from": account})
+    box_v2 = BoxV2.deploy({"from": account}, publish_source=True)
 
     # now we gotta call the upgradeTo function from TransparentUpgradeableProxy.sol
     # we will wrap it up onto its own upgrade function : helpfulscripts

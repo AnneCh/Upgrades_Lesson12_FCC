@@ -36,3 +36,4 @@ def test_proxy_upgrades():
     proxy_box.increment({"from": account})
     assert proxy_box.retrieve() == 1
     # now let's run tests: success! 1 passed, 1 deselected
+    # now let's see on a testnet how it works

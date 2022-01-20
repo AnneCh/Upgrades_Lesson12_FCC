@@ -1,14 +1,17 @@
+from operator import index
 from brownie import network, config, accounts
 import eth_utils
 
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["hardhat", "development", "ganache-local", "ganache"]
 
 
-def get_account(number=None):
+def get_account(index=None, id=None):
     if network.show_active() in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         return accounts[0]
-    if number:
-        return accounts[number]
+    if index:
+        return accounts[index]
+    if id:
+        return accounts.load(id)
     if network.show_active() in config["networks"]:
         account = accounts.add(config["wallets"]["from_key"])
         return account
